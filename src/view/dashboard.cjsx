@@ -1,11 +1,9 @@
 
 React = require "react"
 Router = require "react-router"
-auth = require "../util/Auth"
 Link = Router.Link
 
 Router = require "react-router"
-RequireAuth = require "../util/requireLogin"
 
 Header = require "./header"
 SideBar = require "./sideBar"
@@ -18,7 +16,6 @@ FontIcon = mui.FontIcon
 RaisedButton = mui.RaisedButton
 
 module.exports = React.createClass
-  mixins:[RequireAuth]
 
   componentDidMount: ->
     console.log "Dashboard mounted, starting map"

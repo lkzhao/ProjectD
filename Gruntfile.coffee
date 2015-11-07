@@ -6,7 +6,7 @@ module.exports = (grunt) ->
       compile:
         options: {}
         files:
-          "public/stylesheets/main.css": "websrc/less/main.less"
+          "public/stylesheets/main.css": "src/less/main.less"
     "http-server":
       dev:
         root: "public/"
@@ -16,7 +16,7 @@ module.exports = (grunt) ->
         webpackOptions
     watch:
       less:
-        files: ["websrc/less/*.less"]
+        files: ["src/less/*.less"]
         tasks: ["less"]
         options:
           spawn: false

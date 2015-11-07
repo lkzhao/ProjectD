@@ -1,20 +1,26 @@
 
 React = require "react"
-auth = require "./Auth"
+
 
 RequireProfile =
   getInitialState: ->
     profile: {}
 
+  authChanged: (authData) ->
+    if authData
+      @ref = firebase.child "user/#{authData.uid}"
+      @ref.on "value", (user) =>
+        @setState profile: user
+    else if @ref
+      @ref.off "value"
+
   componentDidMount: ->
-    auth.on 'profileChange', @handleProfileChange
-    @handleProfileChange()
+    @authChanged firebase.getAuth()
+    firebase.onAuth @authChanged
 
   componentWillUnmount: ->
-    auth.off 'profileChange', @handleProfileChange
-
-  handleProfileChange: ->
-    @setState profile: auth.profile
+    @authChanged()
+    firebase.offAuth @authChanged
 
 
 module.exports = RequireProfile

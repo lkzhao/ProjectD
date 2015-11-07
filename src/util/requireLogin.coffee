@@ -1,6 +1,5 @@
 
 React = require "react"
-auth = require "./Auth"
 ReactRouter = require "react-router"
 
 RequireLogin =
@@ -8,7 +7,7 @@ RequireLogin =
     history: React.PropTypes.object
 
   componentWillMount: ->
-    if !auth.loggedIn()
+    if !firebase.getAuth()
       @context.history.pushState null,  "/login"
 
 module.exports = RequireLogin

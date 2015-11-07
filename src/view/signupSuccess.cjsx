@@ -10,10 +10,9 @@ FlatButton = mui.FlatButton
 Tabs = mui.Tabs
 Tab = mui.Tab
 
-auth = require "../util/Auth"
 RequireAuth = require "../util/requireLogin"
 RequireProfile = require "../util/requireProfile"
-socket = auth.socket
+
 
 Router = require "react-router"
 History = Router.History
@@ -25,12 +24,13 @@ module.exports = React.createClass
     uploaded: false
 
   handleUpload: ->
-    auth.uploadImage $('#imageUpload')[0].files[0], (success) =>
-      if success
-        @setState uploaded:true
-      else
-        return
-        # TODO show error
+    return
+    # auth.uploadImage $('#imageUpload')[0].files[0], (success) =>
+    #   if success
+    #     @setState uploaded:true
+    #   else
+    #     return
+    #     # TODO show error
 
   handleImageClick: ->
     $("#imageUpload").click()

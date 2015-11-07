@@ -10,8 +10,6 @@ DialogWindow = mui.DialogWindow
 Router = require "react-router"
 History = Router.History
 
-auth = require "../util/Auth"
-
 React = require "react"
 
 module.exports = React.createClass
@@ -24,19 +22,7 @@ module.exports = React.createClass
     @setState message:e.target.value
 
   handleSend: ->
-    $.ajax(
-      url: "/user/add/#{@props.userProfile.username}?token=#{auth.token}",
-      contentType : "application/json"
-      data: JSON.stringify(message: @state.message),
-      type: 'PUT'
-    ).done( (data) =>
-      if !data.success
-        #TODO display error
-        return
-    ).fail( ->
-      #TODO display error
-      return
-    )
+    return
 
   render: ->
     name = @props.userProfile.name || @props.userProfile.username

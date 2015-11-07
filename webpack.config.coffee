@@ -1,5 +1,5 @@
 module.exports = 
-  entry: "./websrc/view/main"
+  entry: "./src/view/main"
   output:
     path: "public/javascripts/"
     filename: "main.js"

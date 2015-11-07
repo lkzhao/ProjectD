@@ -1,6 +1,5 @@
 React = require "react"
 LinkedStateMixin = require 'react-addons-linked-state-mixin'
-auth = require "../util/Auth"
 Router = require "react-router"
 History = Router.History
 
@@ -45,8 +44,8 @@ module.exports = React.createClass
       emailError: null
 
   componentWillMount: ->
-    if auth.loggedIn()
-      @history.pushState null,   "/"
+    if firebase.getAuth()
+      @history.pushState null, "/"
 
   handleLogin: ->
     console.log "login"
@@ -58,39 +57,65 @@ module.exports = React.createClass
       @setState passwordError:"Password cannot be blank"
     if !@state.password || !@state.username
       return
+    @login()
+
+  login: ->
     @setState loading: true
-    auth.authenticate @state.username, @state.password, (success, error)=>
-      if success
+    firebase.authWithPassword(
+      email: @state.username,
+      password: @state.password
+    , (error, authData) =>
+      if authData
         @history.pushState null,   "/"
       else
         @setState 
-          globalError: error
+          globalError: error.message
           loading: false
+    )        
+
+  signupFailed: (error) ->
+
+    @setState 
+      globalError: error.message
+      loading: false
+    firebase.removeUser
+      email: @state.email
+      password: @state.password
+    , (error) ->
+      if error
+        alert "Fatal error, Please contact customer support"
 
   handleSignup: ->
     if @state.loading
       return
     @setState loading: true
-    auth.signup @state.username, @state.password, @state.email, @state.name, (success, error) =>
-      if success
-        @history.pushState null,   "/signupSuccess"
+    firebase.createUser({
+      email: @state.email,
+      password: @state.password
+    }, (error, userData) =>
+      if userData
+        firebase.authWithPassword(
+          email: @state.email,
+          password: @state.password
+        , (error, authData) =>
+          if authData
+            firebase.child("user/#{authData.uid}").set
+              name: @state.name
+              provider: "password"
+              image: ""
+            , (error) =>
+              if error
+                @signupFailed(error)
+              else
+                @history.pushState null,   "/"
+          else
+            @signupFailed(error)
+        )     
       else
-        errors = 
+        @setState 
+          globalError: error.message
           loading: false
-          usernameError: null
-          passwordError: null
-          emailError: null
-          globalError: null
-        for field, info of error
-          if field == "error"
-            errors.globalError = info
-          if field == "email"
-            errors.emailError = info.message
-          else if field == "hashed_password"
-            errors.passwordError = info.message
-          else if field == "username"
-            errors.usernameError = info.message
-        @setState errors
+    )
 
   goToRoute: (tab) ->
     @setState globalError:null

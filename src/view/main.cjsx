@@ -1,8 +1,11 @@
-Auth = require "../util/Auth"
+
+FireBase = require "firebase"
+window.firebaseUrl = "https://projectdeliver.firebaseio.com"
+window.firebase = new Firebase firebaseUrl
+
 React = require "react"
 ReactDom = require 'react-dom'
 ReactRouter = require "react-router"
-FireBase = require "firebase"
 ReactFire = require "reactfire"
 
 Link = ReactRouter.Link
@@ -10,6 +13,7 @@ Route = ReactRouter.Route
 IndexRoute = ReactRouter.IndexRoute
 Redirect = ReactRouter.Redirect
 Router = ReactRouter.Router
+History = Router.History
 
 Room = require "./room"
 Login = require "./login"
@@ -23,12 +27,18 @@ Colors = require("material-ui/src/styles/colors")
 Theme = require "./theme"
 injectTapEventPlugin()
 
+
 App = React.createClass
+  mixins:[History]
+
   childContextTypes:
     muiTheme: React.PropTypes.object
 
   getChildContext: () ->
     muiTheme: ThemeManager.getMuiTheme(Theme)
+
+  componentDidMount: () ->
+    return
 
   render: ->
     <div className="main">

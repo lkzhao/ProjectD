@@ -11,7 +11,6 @@ Menu = mui.Menu
 Router = require "react-router"
 History = Router.History
 
-auth = require "../util/Auth"
 RequireProfile = require "../util/requireProfile"
 
 React = require "react"
@@ -20,10 +19,11 @@ module.exports = React.createClass
   mixins:[History, RequireProfile]
 
   handleUpload: ->
-    auth.uploadImage $('#imageUpload')[0].files[0], (success) ->
-      if !success
-        return
-        # TODO show error
+    return
+    # auth.uploadImage $('#imageUpload')[0].files[0], (success) ->
+    #   if !success
+    #     return
+    #     # TODO show error
 
   handleImageClick: ->
     $("#imageUpload").click()
@@ -33,7 +33,7 @@ module.exports = React.createClass
 
   handleLogout: ->
     @refs.dialog.dismiss()
-    auth.logout()
+    firebase.unauth()
     @history.pushState null,   "/login"
 
   handleCancel: ->
